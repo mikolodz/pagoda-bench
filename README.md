@@ -2,34 +2,35 @@
 
 A self-contained front-end graphics benchmark for AI agents (or humans): build a beautiful
 five-story **voxel pagoda garden** that runs offline from a double-clicked `index.html`,
-rendered with **Three.js bundled from local disk**. No network access, no build step, no CDN,
-no installation for the recipient.
+rendered with **Three.js bundled from the supplied files**. The recipient needs no network,
+server, installation, or build step.
 
-The scene — not the interface — is the product. The brief is deliberately long because the
-interesting failures here are subtle: a canvas is not a scene, a localhost load is not
-portability, and a slider that changes a CSS background is not a lighting model.
+The brief defines the scene, delivery contract, and observable behavior—not how to implement
+them. Models choose their technical approach and art direction, from expressive trees and
+atmospheric water to rich lighting and a polished interface. The pagoda garden remains the
+centerpiece. The 100-point rubric awards 70 points for the core and 30 for interactive bonuses.
 
 ## Run the benchmark
 
 1. **Clone** this repo and `cd` into it.
-2. **Start your agent inside this directory**, so it picks up `AGENTS.md` automatically — e.g.
-   [`pi`](https://github.com/earendil-works/pi), Claude Code, Codex, or any coding agent that
-   reads repo-local instruction files.
+2. **Start your coding agent inside this directory.** The prompt below explicitly loads the
+   repository instructions, whether or not the agent discovers `AGENTS.md` automatically.
 3. **Prompt it with one line**, e.g.
    `Read AGENTS.md and PAGODA_INSTRUCTION.md, then implement the benchmark.`
-4. The agent writes `index.html` (the artifact) and `IMPLEMENTATION.md` (its notes).
+4. The agent writes `index.html`, any shareable companion files, and `IMPLEMENTATION.md` (its notes).
 5. **Open `index.html` by double-clicking it** — no server, no internet — and review the result
    against the rubric in §7 of the instruction file.
 
-That is the whole setup. Nothing needs to be downloaded or installed: Three.js r180 ships in
-`vendor/`.
+Three.js r180 ships in `vendor/`; no artifact dependency download is needed. Optional dev-only
+browser testing tools are governed by §6 of the brief and never belong in the deliverable.
+For model comparisons, fix tool access, versions, budget, and review conditions before running.
 
 ## What is in the box
 
 | Path | Role |
 |---|---|
-| `PAGODA_INSTRUCTION.md` | The complete task: brief, art direction, offline recipes, bonuses, build stages, verification checklist, 100-point rubric. Read it in full. |
-| `AGENTS.md` | Agent working rules: no web or downloads for the artifact, library comes from `vendor/`, no host filesystem wandering, deliverables. |
-| `vendor/three.cjs` | Three.js **r180**, CommonJS build (self-contained, no `require()`). Must be converted into the artifact — see §4 of the instruction. |
-| `vendor/OrbitControls.js` | Matching `examples/jsm` addon (ES module, imports from bare `'three'`). Optional; rewrite per §4. The only addon supplied. |
-| `vendor/LICENSE` | Three.js MIT licence — carry it into the distribution. |
+| `PAGODA_INSTRUCTION.md` | The complete task: output requirements, art direction, implementation freedom, bonuses, verification, and 100-point rubric. |
+| `AGENTS.md` | Agent entry instructions, working boundaries, and deliverables. |
+| `vendor/three.cjs` | Three.js **r180**, self-contained CommonJS build. Integrating it for offline direct-file use is part of the task. |
+| `vendor/OrbitControls.js` | Matching ES-module camera addon. Optional; the only addon supplied. |
+| `vendor/LICENSE` | Three.js MIT licence—include it in the distribution. |
