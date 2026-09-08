@@ -1,6 +1,11 @@
-shots/
+# Benchmark implementation output: a submission is not part of the published brief.
+# Agents work in this directory; their artifacts stay untracked so variants are easy to diff.
+index.html
+IMPLEMENTATION.md
 src/
 tools/
+shots/
 deliverable/
-index.html
-README.md
+
+# OS cruft
+.DS_Store
