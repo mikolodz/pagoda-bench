@@ -29,32 +29,7 @@ That is the whole setup. Nothing needs to be downloaded or installed: Three.js r
 | Path | Role |
 |---|---|
 | `PAGODA_INSTRUCTION.md` | The complete task: brief, art direction, offline recipes, bonuses, build stages, verification checklist, 100-point rubric. Read it in full. |
-| `AGENTS.md` | Agent working rules: no web/downloads, library comes from `vendor/`, no host filesystem wandering, deliverables. |
+| `AGENTS.md` | Agent working rules: no web or downloads for the artifact, library comes from `vendor/`, no host filesystem wandering, deliverables. |
 | `vendor/three.cjs` | Three.js **r180**, CommonJS build (self-contained, no `require()`). Must be converted into the artifact — see §4 of the instruction. |
 | `vendor/OrbitControls.js` | Matching `examples/jsm` addon (ES module, imports from bare `'three'`). Optional; rewrite per §4. The only addon supplied. |
 | `vendor/LICENSE` | Three.js MIT licence — carry it into the distribution. |
-
-## Scoring
-
-Core 70 points (pagoda architecture 30, composition/atmosphere 20, runtime & delivery 20) plus
-30 bonus points (camera 8, living world 8, time-of-day 7, procedural music 7). A blank page, a
-non-3D substitute, CDN-loaded Three.js, hand-written WebGL standing in for Three.js, or a
-network/server-dependent deliverable does not meet the brief regardless of bonuses.
-
-Score the visible artifact and demonstrated interactions, **not** the agent's self-report.
-
-## Comparing models fairly
-
-Hold everything constant across runs: the same clone of this repo, the same agent tool access,
-the same execution budget, the same browser and viewport (1440×900 plus a narrow pass), and the
-same default camera and time-of-day. Then compare first frames, reverse angles, and night views.
-
-## Notes
-
-- **Implementation output is gitignored by design** (`index.html`, `IMPLEMENTATION.md`, `src/`,
-  `tools/`, `shots/`, `deliverable/`), so `git status` stays clean and different variants or
-  models are easy to diff. Commit on your own branch if you want to keep a result.
-- `README.md` is the benchmark's front page; agent submissions belong in `IMPLEMENTATION.md`.
-- `PAGODA_INSTRUCTION.md` §8 lists the public sources that informed the brief. They are
-  provenance only — the benchmark is offline by contract, and no browsing is required or wanted.
-- Brief and original code: MIT. Bundled Three.js: its own MIT licence, see `vendor/LICENSE`.

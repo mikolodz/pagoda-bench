@@ -7,5 +7,11 @@ tools/
 shots/
 deliverable/
 
+# Optional dev-only browser tooling (PAGODA_INSTRUCTION.md §6). Never part of a deliverable.
+.devtools/
+node_modules/
+package.json
+package-lock.json
+
 # OS cruft
 .DS_Store

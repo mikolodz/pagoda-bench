@@ -194,7 +194,7 @@ Bonus audio is earned by a functioning, musically intentional result—not merel
 
 Use browser automation that is **already in front of you**: a Playwright or Puppeteer MCP/CLI that your agent harness already exposes, or a headless Chrome/Chromium binary already installed on the machine. Point it only at your own artifact or its local development URL.
 
-**Do not go looking for a tool.** No filesystem searches for a Playwright install, no downloads, no `npm install`/`npx`, no new container or service just to obtain a browser. If none exists in your environment, record that as a verification limit and keep building — a missing screenshot is not permission to skip the working artifact, and not permission to claim a review you did not do.
+**Do not go hunting for a tool.** No filesystem searches for a stray Playwright install, no reading other projects or sibling folders for one, no new container or service just to obtain a browser. Use what is already in front of you. If nothing is available, either record the missing checks as verification limits and keep building — or use the explicitly scoped optional install in “Optional: local Playwright” below. A missing screenshot is not permission to skip the working artifact, and not permission to claim a review you did not do.
 
 A bare headless-Chrome capture loop that needs no installation and stays offline:
 
@@ -211,15 +211,35 @@ CHROME=/path/to/an/already-installed/chrome   # a local Google Chrome or Chromiu
 - Capture the states you must judge: the default view, a narrow viewport such as `--window-size=390,844`, a reverse angle and a night view (drive these with a temporary dev camera/time value, or a script that dispatches real input), and two frames several seconds apart to compare motion.
 - **Then look at the pixels.** If your harness can attach an image file to your context — a file-reading tool that supports images (Pi's `read`, Claude Code's `Read`, and similar do), or an MCP browser tool that returns the image itself — open the screenshot and review it. A file path, a byte count, a DOM snapshot, or "the canvas exists" is not visual review. If you truly cannot view images, state that limit and fall back to the checks below.
 - `--dump-dom` is a **weak** probe: it prints hidden markup too, so grepping for your error-panel text false-positives on a working page (confirmed here — the failure string appears in the DOM of a correctly rendering build). Use it only alongside a screenshot or a computed-style visibility check.
-- Playwright/Puppeteer, when already available, is better for interaction and console capture: subscribe to `console`/`pageerror`, drive `page.mouse` drags and wheel for orbit/zoom/pan, then `page.screenshot({ path })` and view that file.
+- Playwright/Puppeteer, when already available, is better for interaction and console capture: subscribe to `console`/`pageerror`, drive `page.mouse` drags and wheel for orbit/zoom/pan, then `page.screenshot({ path })` and view that file. If none is available, see the optional local install below.
 - A local server (`python3 -m http.server`) is convenient for iteration but **does not prove double-click portability**; always finish on a real `file://` load. Never use `--allow-file-access-from-files` or similar flags to paper over `file://` rules — a real double-click has no such flags, so anything needing them fails the brief.
+
+### Optional: local Playwright for interaction and request evidence
+
+The checks above need input simulation and request counts that a screenshot CLI cannot give you. Prefer the zero-install route when a browser already exists. Install only if you genuinely need orbit/pan/zoom simulation, console errors, or outgoing-request evidence — and keep every byte of it inside this directory:
+
+```bash
+mkdir -p .devtools
+export npm_config_cache="$PWD/.devtools/npm-cache"          # never ~/.npm
+export PLAYWRIGHT_BROWSERS_PATH="$PWD/.devtools/browsers"   # never ~/Library/Caches
+npm install --prefix .devtools playwright-core              # no browser download
+```
+
+Then drive the **already-installed** Chrome/Chromium binary with `chromium.launch({ executablePath })`, so nothing is downloaded at all. Only if no local browser exists should you let `npx playwright install chromium` fetch one — and with the export above it lands in `.devtools/browsers`, not your home directory.
+
+Hard rails:
+
+- **Nothing installed may be referenced by, bundled into, or loaded at runtime by `index.html`.** The library still comes only from `vendor/`; the offline contract applies to the artifact, not to your test harness.
+- Never `npm install -g`, never install into your home directory, another project, or anywhere outside this folder. `.devtools/` is gitignored and must not appear in a folder or ZIP deliverable.
+- If there is no network, or the install fights you, **stop**. Fall back to the headless-Chrome loop and record the missing checks as verification limits. Do not spend implementation budget on tooling; the scene is the product.
+- Note in `IMPLEMENTATION.md` which browser tooling you had. §7 requires holding tool access constant between runs, and this is the one place where it can legitimately differ.
 
 ### Verification checklist
 
 Record **pass / fail / not tested**, with evidence or a brief reason, for applicable checks. Fix failures rather than relabeling them as passes.
 
 - **Cold offline launch:** open `index.html` with `file://` in a fresh browser context with networking blocked/offline. Verify a visible scene and working implemented controls. Inspect outgoing requests; zero external resource dependencies — including Three.js. HTTP localhost alone or a cache-backed load is insufficient.
-- **Library provenance:** the deliverable contains the bundled Three.js source it actually runs, its licence text, and the exact revision stated in `IMPLEMENTATION.md`. No CDN/importmap/`npm`/`npx` step, no remote `three/addons` load, and no hand-written WebGL scene substituting Three.js.
+- **Library provenance:** the deliverable contains the bundled Three.js source it actually runs, its licence text, and the exact revision stated in `IMPLEMENTATION.md`. No CDN/importmap/`npm`/`npx` step **for anything the artifact loads**, no remote `three/addons` load, and no hand-written WebGL scene substituting Three.js. (Dev-only test tooling under `.devtools/` per §6 is not part of the deliverable and does not count against this check.)
 - **Visual review:** inspect the actual image at about 1440×900, then a narrow viewport such as 390×844. All five roofs and finial visible; readable tier spacing; deliberate palette; grounded objects; no clipping, flicker, empty scene, or control overlap. Take default, reverse-angle, and night views if supported. Prefer at least one render–inspect–refine cycle.
 - **Real 3D:** orbit to the back and a different elevation. Perspective/occlusion must change correctly; the back is finished. If the camera bonus is absent, use a temporary development camera to inspect these angles.
 - **Camera:** orbit, zoom to both limits, pan, release a drag outside the canvas, and reset. No stuck dragging, upside-down view, lost target, or slider/input conflict.
